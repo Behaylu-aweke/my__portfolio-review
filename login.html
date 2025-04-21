@@ -1,0 +1,79 @@
+
+
+<!DOCTYPE html>
+<html>
+    
+        <head>
+            <title></title>
+            <link rel="stylesheet" href="style.css">
+        </head>
+        <body>
+            <div class="container">
+                <div class="form_container <?= isActiveForm ('login', $activeForm);?>" id="">
+                    <form>
+                        <h2>login</h2>
+                        <input id="email" type="e-mail" name="e-mail" placeholder="e-mail" required>
+                        <input id="password" type="password" name="password" placeholder="password" required>
+                        <button id="login_form" type="submit" name="login">login</button>
+                        <P>don't have an account <a href="register.html" onclick="showForm('register_form')">register</a></P>
+                    </form>
+
+                </div>
+                
+
+                </div>
+
+        </body>
+        <script>
+
+const btn = document.getElementById("login_form");
+
+    btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        console.log(email, password);
+        var data = {
+            email: email, password: password,
+        }
+        const url = "http://localhost:5000/auth/user/login";
+        try {
+            const response = await fetch(url,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data)
+                });
+
+            if (!response.ok) {
+                console.log(`HTTP error! status: ${response.status}`);
+            }
+            const returneddata = await response.json();
+            console.log(returneddata)
+
+            const role=returneddata.role;
+            if (!returneddata.error) {
+                if(role === "admin"){
+                    window.location.href = "/frontend/admin.html";
+                }else{
+                    window.location.href = "/frontend/index.html";
+                }
+                alert(returneddata.message)
+            }else{
+                alert(returneddata.error)
+            }
+
+        } catch (error) {
+            console.log(error)
+        } finally {
+            document.getElementById("login_form").reset();
+        }
+
+    })
+    
+  
+    </script>
+</html>

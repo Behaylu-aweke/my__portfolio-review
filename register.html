@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>registration page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="form_container <?= isActiveForm ('register', $activeForm);?>" id="register_form">
+
+        <form id="signup">
+            <h2>register</h2>
+
+            <input id="name" name="name" placeholder="name" required>
+            <input id="email" type="email" name="email" placeholder="e-mail" required>
+            <input id="password2" type="text" name="password" placeholder="password" required>
+            <select id="role" name="role" required>
+                <option value="">select role</option>
+                <option value="user" selected>user</option>
+                <option value="admin">admin</option>
+            </select>
+            <button id="register" name="register">register</button>
+            <P>I have an account <a href="login.html">login</a></P>
+        </form>
+    </div>
+</body>
+<script>
+
+
+    const btn = document.getElementById("register");
+
+    btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password2").value;
+        const role = document.getElementById("role").value;
+
+        console.log(name, email, password, role);
+        var data = {
+            name: name, email: email, password: password, role: role,
+        }
+        console.log(data) 
+
+        const url = "http://localhost:5000/auth/user/signup";
+        try {
+            const response = await fetch(url,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data)
+                });
+
+            if (!response.ok) {
+                console.log(`HTTP error! status: ${response.status}`);
+            }
+            const returneddata = await response.json();
+
+            alert(returneddata.message)
+           window.location.href ="/frontend/login.html";
+        } catch (error) {
+            console.log(error)
+        } finally {
+            document.getElementById("signup").reset();
+        }
+    })
+
+    
+</script>
+
+</html>
